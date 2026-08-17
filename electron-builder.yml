@@ -1,6 +1,7 @@
 appId: com.dsh.desktop
 productName: DSH Desktop
 copyright: MIT
+electronDist: node_modules/electron/dist
 directories:
   buildResources: build
   output: dist

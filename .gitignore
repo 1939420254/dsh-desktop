@@ -6,3 +6,10 @@ dist/
 .vite/
 
 *.tsbuildinfo
+
+# generated diagnostic artifacts
+scripts/*.png
+scripts/inspect-result.json
+scripts/composer-sheet.css
+scripts/analyze-*.cjs
+scripts/composer-*.cjs
