@@ -112,22 +112,11 @@ a:hover {
 /* ---------- 4. 焦点环 / 选区 / 滚动条 ---------- */
 /* 输入类元素不套用全局 outline：其可见的"输入框边框"其实是外层卡片，
    直接给 textarea/input 画描边会造成蓝色描边比卡片边框短、圆角不一致的错位。
-   改为聚焦时给外层容器一个一致的品牌蓝边框 + 静态柔和光晕（无呼吸动画）。 */
+   聚焦时暂不添加任何特效（保留原生行为）。 */
 input:focus-visible,
 textarea:focus-visible,
 [contenteditable='true']:focus-visible {
   outline: none !important;
-}
-div:has(textarea:focus),
-div:has(input:focus) {
-  border-color: rgb(57, 100, 254, 0.5) !important;
-  box-shadow:
-    0 0 0 3px rgb(57, 100, 254, 0.15),
-    var(--dsw-shadow-lv2, 0 2px 8px 0 rgba(0, 0, 0, 0.04)) !important;
-}
-/* 输入框卡片悬浮时边框染上品牌色（动漫感过渡） */
-div:has(> div > div > textarea):hover {
-  border-color: rgb(124 139 250 / 0.45) !important;
 }
 :focus-visible {
   outline: 2px solid rgb(57, 100, 254) !important;
