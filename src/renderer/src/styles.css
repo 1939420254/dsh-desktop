@@ -1,19 +1,25 @@
 /* =====================================================================
- * DSH Desktop — 壳层样式
- * 品牌色：#3964fe 及关联色；圆角平滑风；微动效
- * 支持亮/暗两套，跟随系统 prefers-color-scheme
+ * DSH Desktop — 壳层样式（动漫感 · 张力 · 动效）
+ * 基准色：#3964fe，辅以紫/粉/青的能量渐变
+ * 交互：弹簧 overshoot、辉光、按压挤压、扫光
  * ===================================================================== */
 
 :root {
   --brand-450: #3964fe;
-  --brand-400: #7c8bfa;
   --brand-500: #3356e9;
-  --brand-600: #2e4dd2;
+  --brand-400: #7c8bfa;
+  --brand-300: #a5b4fc;
+  --anime-purple: #8b5cf6;
+  --anime-pink: #f472b6;
+  --anime-cyan: #22d3ee;
   --titlebar-h: 48px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
   --radius-md: 12px;
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --glow-blue: 0 0 18px rgba(57, 100, 254, 0.45);
+  --glow-purple: 0 0 22px rgba(139, 92, 246, 0.35);
+  --glow-soft: 0 6px 20px rgba(57, 100, 254, 0.28);
 }
 
 * {
@@ -38,19 +44,19 @@ body,
   user-select: none;
 }
 
-/* ---- 亮色（默认） ---- */
+/* ---- 亮色（默认）：蓝→紫的柔和能量渐变 ---- */
 .shell {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #f4f6fb;
+  background: linear-gradient(160deg, #f4f6fb 0%, #edf1ff 45%, #f7f0ff 100%);
   color: #101828;
 }
 
-/* ---- 暗色 ---- */
+/* ---- 暗色：深空蓝紫 ---- */
 @media (prefers-color-scheme: dark) {
   .shell {
-    background: #0b1220;
+    background: linear-gradient(160deg, #0b1220 0%, #121a3c 48%, #1c1442 100%);
     color: #e8ecf4;
   }
 }
@@ -67,15 +73,43 @@ body,
   -webkit-app-region: drag;
   position: relative;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(18px) saturate(1.4);
-  border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.78), rgba(238, 242, 255, 0.82));
+  backdrop-filter: blur(18px) saturate(1.5);
+  border-bottom: 1px solid rgba(57, 100, 254, 0.16);
+  overflow: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
   .titlebar {
-    background: rgba(11, 18, 32, 0.72);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(120deg, rgba(11, 18, 32, 0.82), rgba(30, 24, 74, 0.86));
+    border-bottom: 1px solid rgba(124, 139, 250, 0.28);
+  }
+}
+
+/* 标题栏周期性扫光（能量流动） */
+.titlebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(124, 139, 250, 0.1) 45%,
+    rgba(244, 114, 182, 0.08) 55%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  animation: titlebar-sheen 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes titlebar-sheen {
+  0%,
+  60% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 
@@ -84,42 +118,82 @@ body,
   align-items: center;
   gap: 10px;
   height: 100%;
+  position: relative;
+  z-index: 1;
 }
 
+/* Logo：旋转的 conic 能量渐变 + 辉光呼吸 */
 .titlebar-logo {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: 9px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--brand-450), var(--brand-400));
+  background: conic-gradient(from 0deg, #3964fe, #8b5cf6, #f472b6, #22d3ee, #3964fe);
+  animation: energy-spin 6s linear infinite;
   box-shadow:
-    0 2px 8px rgba(57, 100, 254, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    0 2px 10px rgba(57, 100, 254, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
+@keyframes energy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.titlebar-logo svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+/* 标题：流动渐变文字 */
 .titlebar-title {
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(90deg, #1c2a4a, #3964fe, #8b5cf6, #1c2a4a);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .titlebar-title {
+    background: linear-gradient(90deg, #f4f7ff, #7c8bfa, #e9d5ff, #f4f7ff);
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
 }
 
 .titlebar-version {
   font-size: 11px;
-  opacity: 0.45;
-  padding: 2px 7px;
+  opacity: 0.5;
+  padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(127, 130, 135, 0.12);
+  background: rgba(57, 100, 254, 0.1);
+  border: 1px solid rgba(57, 100, 254, 0.18);
 }
 
+/* 状态胶囊：渐变边框 + 辉光 */
 .titlebar-status {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-left: 6px;
-  padding: 3px 10px;
+  padding: 3px 11px;
   border-radius: 999px;
-  background: rgba(127, 130, 135, 0.1);
+  background: rgba(57, 100, 254, 0.08);
+  border: 1px solid rgba(124, 139, 250, 0.28);
+  box-shadow: 0 0 12px rgba(57, 100, 254, 0.12) inset;
 }
 
 .status-dot {
@@ -131,16 +205,20 @@ body,
 
 .status-text {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .titlebar-right {
   display: flex;
   height: 100%;
   -webkit-app-region: no-drag;
+  position: relative;
+  z-index: 1;
 }
 
+/* 窗口按钮：弹簧悬浮 + 能量辉光 + 按压挤压 */
 .win-btn {
+  position: relative;
   width: 46px;
   height: 100%;
   border: none;
@@ -149,18 +227,25 @@ body,
   display: grid;
   place-items: center;
   cursor: default;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
 }
 
-.win-btn:hover {
-  background: rgba(127, 130, 135, 0.16);
+.win-btn::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 9px;
+  background: radial-gradient(circle, rgba(124, 139, 250, 0.4), transparent 72%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
-.win-btn-close:hover {
-  background: #e81123;
-  color: #fff;
+.win-btn:hover::after {
+  opacity: 1;
+}
+
+.win-btn-close::after {
+  background: radial-gradient(circle, rgba(232, 17, 35, 0.42), transparent 72%);
 }
 
 /* ============================= 内容区 ============================= */
@@ -176,7 +261,7 @@ body,
   inset: 0;
 }
 
-/* ============================= Splash ============================= */
+/* ============================= Splash（动漫化） ============================= */
 
 .splash {
   position: absolute;
@@ -187,8 +272,8 @@ body,
   justify-content: center;
   gap: 6px;
   overflow: hidden;
-  background: linear-gradient(160deg, #0b1220 0%, #111c3d 55%, #0b1220 100%);
-  color: #e8ecf4;
+  background: linear-gradient(155deg, #0a0f24 0%, #151b4d 38%, #2a1760 68%, #0a0f24 100%);
+  color: #eef2ff;
 }
 
 .splash-bg {
@@ -200,35 +285,36 @@ body,
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.5;
+  filter: blur(74px);
 }
 
 .blob-1 {
-  width: 420px;
-  height: 420px;
-  left: -120px;
-  top: -140px;
+  width: 440px;
+  height: 440px;
+  left: -130px;
+  top: -150px;
   background: #3964fe;
+  opacity: 0.55;
   animation: drift 9s ease-in-out infinite alternate;
 }
 
 .blob-2 {
-  width: 360px;
-  height: 360px;
-  right: -100px;
-  bottom: -120px;
-  background: #2e4dd2;
+  width: 380px;
+  height: 380px;
+  right: -110px;
+  bottom: -130px;
+  background: #8b5cf6;
+  opacity: 0.5;
   animation: drift 11s ease-in-out infinite alternate-reverse;
 }
 
 .blob-3 {
   width: 260px;
   height: 260px;
-  left: 42%;
-  top: -80px;
-  background: #7c8bfa;
-  opacity: 0.35;
+  left: 40%;
+  top: -90px;
+  background: #f472b6;
+  opacity: 0.32;
   animation: drift 13s ease-in-out infinite alternate;
 }
 
@@ -237,84 +323,147 @@ body,
     transform: translate(0, 0) scale(1);
   }
   to {
-    transform: translate(46px, 34px) scale(1.12);
+    transform: translate(48px, 36px) scale(1.14);
   }
+}
+
+/* 悬浮能量粒子 */
+.spark {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .splash-logo-wrap {
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   display: grid;
   place-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+}
+
+/* 旋转 conic 能量环 */
+.splash-energy-ring {
+  position: absolute;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    #3964fe 18%,
+    #8b5cf6 36%,
+    #f472b6 54%,
+    #22d3ee 72%,
+    transparent 90%
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: energy-spin 2.6s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(124, 139, 250, 0.8));
+  z-index: 1;
+}
+
+/* 呼吸辉光盘 */
+.splash-logo-halo {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: radial-gradient(circle, rgba(57, 100, 254, 0.55), rgba(139, 92, 246, 0.2) 60%, transparent 75%);
+  animation: halo-breathe 2.4s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes halo-breathe {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
 }
 
 .splash-logo {
   width: 72px;
   height: 72px;
-  border-radius: 22px;
+  border-radius: 24px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--brand-450), var(--brand-400));
+  background: linear-gradient(135deg, #3964fe 0%, #8b5cf6 55%, #f472b6 120%);
   box-shadow:
-    0 12px 34px rgba(57, 100, 254, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 14px 40px rgba(57, 100, 254, 0.6),
+    0 4px 16px rgba(139, 92, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
   z-index: 2;
 }
 
+/* 向外扩散的能量环 */
 .splash-ring {
   position: absolute;
   width: 72px;
   height: 72px;
-  border-radius: 22px;
-  border: 2px solid rgba(124, 139, 250, 0.7);
-  z-index: 1;
+  border-radius: 24px;
+  border: 2px solid rgba(124, 139, 250, 0.75);
+  z-index: 0;
 }
 
 .splash-ring-2 {
-  border-color: rgba(124, 139, 250, 0.4);
+  border-color: rgba(244, 114, 182, 0.45);
 }
 
 .splash-title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  background: linear-gradient(90deg, #fff, #b9c6ff);
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  background: linear-gradient(90deg, #ffffff, #a5b4fc, #e9d5ff, #ffffff);
+  background-size: 220% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+  filter: drop-shadow(0 2px 10px rgba(57, 100, 254, 0.35));
 }
 
 .splash-sub {
   font-size: 13px;
-  color: rgba(232, 236, 244, 0.55);
+  color: rgba(238, 242, 255, 0.6);
   margin-top: 4px;
 }
 
 .splash-steps {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-top: 34px;
-  min-width: 220px;
+  min-width: 240px;
 }
 
 .splash-step {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 5px;
   font-size: 13px;
-  color: rgba(232, 236, 244, 0.4);
+  color: rgba(238, 242, 255, 0.4);
   transition: color 0.3s ease;
 }
 
 .splash-step.active {
-  color: rgba(232, 236, 244, 0.95);
+  color: rgba(238, 242, 255, 0.95);
 }
 
 .splash-step.done {
-  color: rgba(124, 139, 250, 0.9);
+  color: rgba(165, 180, 252, 0.95);
+}
+
+.step-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .step-dot {
@@ -324,7 +473,16 @@ body,
   display: grid;
   place-items: center;
   font-size: 11px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  flex: none;
+}
+
+.step-dot.done {
+  background: linear-gradient(135deg, #3964fe, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(57, 100, 254, 0.5);
 }
 
 .step-spinner {
@@ -332,7 +490,7 @@ body,
   height: 10px;
   border-radius: 50%;
   border: 2px solid rgba(124, 139, 250, 0.3);
-  border-top-color: var(--brand-400);
+  border-top-color: #a5b4fc;
   animation: spin 0.8s linear infinite;
 }
 
@@ -342,6 +500,22 @@ body,
   }
 }
 
+/* 渐变进度条 */
+.step-track {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-left: 28px;
+}
+
+.step-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3964fe, #8b5cf6, #f472b6);
+  box-shadow: 0 0 8px rgba(124, 139, 250, 0.8);
+}
+
 /* ============================= 错误卡片 ============================= */
 
 .error-wrap {
@@ -349,12 +523,12 @@ body,
   inset: 0;
   display: grid;
   place-items: center;
-  background: #f4f6fb;
+  background: linear-gradient(160deg, #f4f6fb, #edf1ff 45%, #f7f0ff);
 }
 
 @media (prefers-color-scheme: dark) {
   .error-wrap {
-    background: #0b1220;
+    background: linear-gradient(160deg, #0b1220, #121a3c 48%, #1c1442);
   }
 }
 
@@ -362,31 +536,37 @@ body,
   width: min(420px, 86vw);
   padding: 32px 28px;
   border-radius: var(--radius-lg);
-  background: #fff;
-  border: 1px solid rgba(16, 24, 40, 0.08);
-  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.14);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(57, 100, 254, 0.18);
+  box-shadow:
+    0 18px 50px rgba(16, 24, 40, 0.16),
+    0 0 30px rgba(57, 100, 254, 0.1);
   text-align: center;
+  backdrop-filter: blur(12px);
 }
 
 @media (prefers-color-scheme: dark) {
   .error-card {
-    background: #131c33;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    background: rgba(19, 28, 51, 0.92);
+    border-color: rgba(124, 139, 250, 0.25);
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(57, 100, 254, 0.12);
   }
 }
 
 .error-icon {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   margin: 0 auto 14px;
-  border-radius: 14px;
+  border-radius: 15px;
   display: grid;
   place-items: center;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
-  background: linear-gradient(135deg, #ef4444, #f97316);
+  background: linear-gradient(135deg, #ef4444, #f472b6);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
 }
 
 .error-card h2 {
@@ -398,7 +578,7 @@ body,
   font-size: 12.5px;
   font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
   color: rgba(127, 130, 135, 0.9);
-  background: rgba(127, 130, 135, 0.08);
+  background: rgba(57, 100, 254, 0.07);
   padding: 8px 12px;
   border-radius: var(--radius-md);
   word-break: break-all;
@@ -418,28 +598,55 @@ body,
   gap: 10px;
 }
 
+/* 主按钮：渐变 + 扫光 + 辉光呼吸 */
 .btn-primary {
-  padding: 8px 22px;
+  position: relative;
+  overflow: hidden;
+  padding: 9px 24px;
   border: none;
-  border-radius: 10px;
+  border-radius: 11px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
-  background: linear-gradient(135deg, var(--brand-450), var(--brand-500));
-  box-shadow: 0 4px 14px rgba(57, 100, 254, 0.4);
+  background: linear-gradient(135deg, #3964fe, #8b5cf6);
+  box-shadow: 0 6px 20px rgba(57, 100, 254, 0.45);
   cursor: pointer;
   transition:
-    transform 0.16s var(--ease-out),
-    box-shadow 0.2s ease,
+    transform 0.22s var(--ease-spring),
+    box-shadow 0.25s ease,
     filter 0.2s ease;
 }
 
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -70%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-22deg);
+  animation: btn-shine 3.2s ease-in-out infinite;
+}
+
+@keyframes btn-shine {
+  0%,
+  55% {
+    left: -70%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
 .btn-primary:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
-  box-shadow: 0 6px 18px rgba(57, 100, 254, 0.5);
+  transform: translateY(-2px) scale(1.03);
+  filter: brightness(1.1);
+  box-shadow:
+    0 10px 28px rgba(57, 100, 254, 0.55),
+    0 0 22px rgba(139, 92, 246, 0.35);
 }
 
 .btn-primary:active {
-  transform: translateY(0) scale(0.97);
+  transform: translateY(0) scale(0.94);
 }

@@ -74,7 +74,7 @@ select {
   border-radius: 14px !important;
 }
 
-/* ---------- 3. 微动效 ---------- */
+/* ---------- 3. 微动效（动漫张力：overshoot 弹簧 + 辉光 + 按压挤压） ---------- */
 html {
   scroll-behavior: smooth;
 }
@@ -89,38 +89,63 @@ select,
     background-color 0.18s ease,
     border-color 0.18s ease,
     color 0.18s ease,
-    box-shadow 0.22s ease,
-    transform 0.16s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow 0.25s ease,
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
+/* 悬浮：轻微上浮 + 放大 + 品牌色辉光（弹簧回弹感） */
 button:not(:disabled):hover,
 [role='button']:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 18px rgb(57 100 254 / 0.18);
 }
+/* 按压：压缩 + 辉光收紧，释放时回弹 */
 button:not(:disabled):active,
 [role='button']:active {
-  transform: translateY(0) scale(0.97);
+  transform: translateY(0) scale(0.94);
+  box-shadow: 0 2px 8px rgb(57 100 254 / 0.28);
+}
+/* 链接悬浮：辉光文字 */
+a:hover {
+  text-shadow: 0 0 12px rgb(57 100 254 / 0.55);
 }
 
 /* ---------- 4. 焦点环 / 选区 / 滚动条 ---------- */
 /* 输入类元素不套用全局 outline：其可见的"输入框边框"其实是外层卡片，
    直接给 textarea/input 画描边会造成蓝色描边比卡片边框短、圆角不一致的错位。
-   改为聚焦时给外层容器一个一致的品牌蓝边框 + 柔和光晕。 */
+   改为聚焦时给外层容器一个一致的品牌蓝边框 + 呼吸辉光。 */
 input:focus-visible,
 textarea:focus-visible,
 [contenteditable='true']:focus-visible {
   outline: none !important;
 }
+@keyframes dsh-focus-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgb(57 100 254 / 0.14),
+      var(--dsw-shadow-lv2, 0 2px 8px 0 rgba(0, 0, 0, 0.04));
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgb(57 100 254 / 0.22),
+      0 0 24px rgb(57 100 254 / 0.18),
+      var(--dsw-shadow-lv2, 0 2px 8px 0 rgba(0, 0, 0, 0.04));
+  }
+}
 div:has(textarea:focus),
 div:has(input:focus) {
   border-color: rgb(57, 100, 254, 0.5) !important;
-  box-shadow:
-    0 0 0 3px rgb(57, 100, 254, 0.15),
-    var(--dsw-shadow-lv2, 0 2px 8px 0 rgba(0, 0, 0, 0.04)) !important;
+  animation: dsh-focus-breathe 2.2s ease-in-out infinite;
+}
+/* 输入框卡片悬浮时边框染上品牌色（动漫感过渡） */
+div:has(> div > div > textarea):hover {
+  border-color: rgb(124 139 250 / 0.45) !important;
 }
 :focus-visible {
   outline: 2px solid rgb(57, 100, 254) !important;
   outline-offset: 2px;
   border-radius: inherit;
+  box-shadow: 0 0 0 4px rgb(57 100 254 / 0.12);
 }
 ::selection {
   background: rgb(57, 100, 254, 0.25);

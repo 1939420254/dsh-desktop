@@ -13,3 +13,6 @@ scripts/inspect-result.json
 scripts/composer-sheet.css
 scripts/analyze-*.cjs
 scripts/composer-*.cjs
+scripts/ascii-*.cjs
+scripts/check-window.cjs
+scripts/push-status.txt
