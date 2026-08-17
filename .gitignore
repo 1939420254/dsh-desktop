@@ -16,3 +16,4 @@ scripts/composer-*.cjs
 scripts/ascii-*.cjs
 scripts/check-window.cjs
 push-status.txt
+scripts/cc-app*.cjs
