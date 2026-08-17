@@ -15,4 +15,4 @@ scripts/analyze-*.cjs
 scripts/composer-*.cjs
 scripts/ascii-*.cjs
 scripts/check-window.cjs
-scripts/push-status.txt
+push-status.txt
