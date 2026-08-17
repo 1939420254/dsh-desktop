@@ -1,0 +1,139 @@
+/* =====================================================================
+ * DSH Desktop — 注入 DeepSeek Harness Web UI 的主题层
+ * 基准色：#3964fe（与 DSH 官方品牌色同源，本主题将其收敛为精确目标值）
+ * 风格   ：圆角平滑风 + 微动效
+ * 实现   ：重映射 --dsw-static-deepseek-* 品牌色板 + alias 覆盖，
+ *         再加结构性的圆角 / 动效 / 滚动条 / 焦点环增强。
+ * ===================================================================== */
+
+/* ---------- 1. 品牌色板重映射（#3964fe 及关联色） ---------- */
+html,
+body {
+  /* light & dark 共用同一套品牌色板 */
+  --dsw-static-deepseek-50: rgb(238, 242, 255) !important;   /* #eef2ff */
+  --dsw-static-deepseek-100: rgb(224, 231, 255) !important;  /* #e0e7ff */
+  --dsw-static-deepseek-200: rgb(199, 210, 254) !important;  /* #c7d2fe */
+  --dsw-static-deepseek-300: rgb(165, 180, 252) !important;  /* #a5b4fc */
+  --dsw-static-deepseek-400: rgb(124, 139, 250) !important;  /* #7c8bfa */
+  --dsw-static-deepseek-450: rgb(57, 100, 254) !important;   /* #3964fe ★ 基准 */
+  --dsw-static-deepseek-500: rgb(51, 86, 233) !important;    /* #3356e9 */
+  --dsw-static-deepseek-600: rgb(46, 77, 210) !important;    /* #2e4dd2 */
+  --dsw-static-deepseek-700-delete: rgb(40, 66, 170) !important; /* #2842aa */
+  --dsw-static-deepseek-800: rgb(38, 54, 110) !important;    /* #26366e */
+  --dsw-static-deepseek-900: rgb(30, 42, 84) !important;     /* #1e2a54 */
+
+  /* alias 层的品牌关联色 */
+  --dsw-alias-brand-primary-new-colorprimary-new-color: rgb(57, 100, 254) !important;
+  --dsw-alias-brand-primary-invert: rgb(57, 100, 254) !important;
+  --dsw-alias-button-info-fill: rgb(57, 100, 254) !important;
+  --dsw-alias-button-info-hover: rgb(124, 139, 250) !important;
+  --dsw-alias-state-business-primary: rgb(57, 100, 254) !important;
+  --dsw-alias-state-business-tertiary: rgb(224, 231, 255) !important;
+  --dsw-specific-bubble-highlight: rgb(199, 210, 254) !important;
+  --dsw-specific-bubble: rgb(238, 242, 255) !important;
+  --dsw-specific-sidebar-nav-item-active-accent: rgb(224, 231, 255) !important;
+  --dsw-alias-button-primary-fill: rgb(57, 100, 254) !important;
+  --dsw-alias-button-primary-hover: rgb(46, 77, 210) !important;
+  --dsw-alias-button-primary-dimmed: rgb(199, 210, 254) !important;
+}
+
+/* 暗色模式下的微调：保持品牌色在深底上足够亮 */
+body[data-ds-dark-theme] {
+  --dsw-alias-button-info-fill: rgb(124, 139, 250) !important;
+  --dsw-alias-button-info-hover: rgb(57, 100, 254) !important;
+  --dsw-alias-state-business-primary: rgb(124, 139, 250) !important;
+  --dsw-alias-state-business-tertiary: rgb(38, 54, 110) !important;
+  --dsw-specific-bubble-highlight: rgb(46, 77, 210) !important;
+  --dsw-specific-bubble: rgb(30, 42, 84) !important;
+  --dsw-specific-sidebar-nav-item-active-accent: rgb(38, 54, 110) !important;
+  --dsw-alias-button-primary-fill: rgb(57, 100, 254) !important;
+  --dsw-alias-button-primary-hover: rgb(124, 139, 250) !important;
+  --dsw-alias-button-primary-dimmed: rgb(46, 77, 210) !important;
+}
+
+/* ---------- 2. 圆角平滑风 ---------- */
+button {
+  border-radius: 10px !important;
+}
+input,
+textarea {
+  border-radius: 14px !important;
+}
+select {
+  border-radius: 10px !important;
+}
+[role='dialog'],
+[role='menu'],
+[role='tooltip'],
+[role='listbox'],
+[data-radix-popper-content-wrapper] > div {
+  border-radius: 14px !important;
+}
+/* 聊天输入框与消息卡片的大圆角 */
+[contenteditable='true'] {
+  border-radius: 14px !important;
+}
+/* 小图标按钮做成精致的小圆角方块 */
+button[style*='28px'],
+button[style*='30px'],
+button[style*='32px'] {
+  border-radius: 9px !important;
+}
+
+/* ---------- 3. 微动效 ---------- */
+html {
+  scroll-behavior: smooth;
+}
+button:not(:disabled),
+a,
+[role='button'],
+input,
+textarea,
+select,
+[contenteditable='true'] {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.22s ease,
+    transform 0.16s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+button:not(:disabled):hover,
+[role='button']:hover {
+  transform: translateY(-1px);
+}
+button:not(:disabled):active,
+[role='button']:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* ---------- 4. 焦点环 / 选区 / 滚动条 ---------- */
+:focus-visible {
+  outline: 2px solid rgb(57, 100, 254) !important;
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+::selection {
+  background: rgb(57, 100, 254, 0.25);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(57, 100, 254, 0.35);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(57, 100, 254, 0.55);
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

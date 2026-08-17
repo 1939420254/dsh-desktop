@@ -1,0 +1,25 @@
+appId: com.dsh.desktop
+productName: DSH Desktop
+copyright: MIT
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+  - resources/**
+asar: true
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: DSH Desktop
+  artifactName: ${productName}-Setup-${version}.${ext}

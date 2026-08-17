@@ -1,0 +1,445 @@
+/* =====================================================================
+ * DSH Desktop — 壳层样式
+ * 品牌色：#3964fe 及关联色；圆角平滑风；微动效
+ * 支持亮/暗两套，跟随系统 prefers-color-scheme
+ * ===================================================================== */
+
+:root {
+  --brand-450: #3964fe;
+  --brand-400: #7c8bfa;
+  --brand-500: #3356e9;
+  --brand-600: #2e4dd2;
+  --titlebar-h: 48px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  font-family:
+    'Segoe UI Variable Text',
+    'Segoe UI',
+    'PingFang SC',
+    'Microsoft YaHei',
+    system-ui,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ---- 亮色（默认） ---- */
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f4f6fb;
+  color: #101828;
+}
+
+/* ---- 暗色 ---- */
+@media (prefers-color-scheme: dark) {
+  .shell {
+    background: #0b1220;
+    color: #e8ecf4;
+  }
+}
+
+/* ============================= 标题栏 ============================= */
+
+.titlebar {
+  height: var(--titlebar-h);
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0 14px;
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  .titlebar {
+    background: rgba(11, 18, 32, 0.72);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+}
+
+.titlebar-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--brand-450), var(--brand-400));
+  box-shadow:
+    0 2px 8px rgba(57, 100, 254, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.titlebar-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.titlebar-version {
+  font-size: 11px;
+  opacity: 0.45;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(127, 130, 135, 0.12);
+}
+
+.titlebar-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(127, 130, 135, 0.1);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-text {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.titlebar-right {
+  display: flex;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.win-btn {
+  width: 46px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: grid;
+  place-items: center;
+  cursor: default;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.win-btn:hover {
+  background: rgba(127, 130, 135, 0.16);
+}
+
+.win-btn-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+/* ============================= 内容区 ============================= */
+
+.shell-content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.content-hint {
+  position: absolute;
+  inset: 0;
+}
+
+/* ============================= Splash ============================= */
+
+.splash {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0b1220 0%, #111c3d 55%, #0b1220 100%);
+  color: #e8ecf4;
+}
+
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.5;
+}
+
+.blob-1 {
+  width: 420px;
+  height: 420px;
+  left: -120px;
+  top: -140px;
+  background: #3964fe;
+  animation: drift 9s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 360px;
+  height: 360px;
+  right: -100px;
+  bottom: -120px;
+  background: #2e4dd2;
+  animation: drift 11s ease-in-out infinite alternate-reverse;
+}
+
+.blob-3 {
+  width: 260px;
+  height: 260px;
+  left: 42%;
+  top: -80px;
+  background: #7c8bfa;
+  opacity: 0.35;
+  animation: drift 13s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(46px, 34px) scale(1.12);
+  }
+}
+
+.splash-logo-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+}
+
+.splash-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--brand-450), var(--brand-400));
+  box-shadow:
+    0 12px 34px rgba(57, 100, 254, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  z-index: 2;
+}
+
+.splash-ring {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  border: 2px solid rgba(124, 139, 250, 0.7);
+  z-index: 1;
+}
+
+.splash-ring-2 {
+  border-color: rgba(124, 139, 250, 0.4);
+}
+
+.splash-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(90deg, #fff, #b9c6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.splash-sub {
+  font-size: 13px;
+  color: rgba(232, 236, 244, 0.55);
+  margin-top: 4px;
+}
+
+.splash-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 34px;
+  min-width: 220px;
+}
+
+.splash-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(232, 236, 244, 0.4);
+  transition: color 0.3s ease;
+}
+
+.splash-step.active {
+  color: rgba(232, 236, 244, 0.95);
+}
+
+.splash-step.done {
+  color: rgba(124, 139, 250, 0.9);
+}
+
+.step-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.step-spinner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(124, 139, 250, 0.3);
+  border-top-color: var(--brand-400);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================= 错误卡片 ============================= */
+
+.error-wrap {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #f4f6fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error-wrap {
+    background: #0b1220;
+  }
+}
+
+.error-card {
+  width: min(420px, 86vw);
+  padding: 32px 28px;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.14);
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error-card {
+    background: #131c33;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.error-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+}
+
+.error-card h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.error-msg {
+  font-size: 12.5px;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  color: rgba(127, 130, 135, 0.9);
+  background: rgba(127, 130, 135, 0.08);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  word-break: break-all;
+  margin-bottom: 10px;
+  user-select: text;
+}
+
+.error-hint {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 18px;
+}
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-primary {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand-450), var(--brand-500));
+  box-shadow: 0 4px 14px rgba(57, 100, 254, 0.4);
+  cursor: pointer;
+  transition:
+    transform 0.16s var(--ease-out),
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 18px rgba(57, 100, 254, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.97);
+}
